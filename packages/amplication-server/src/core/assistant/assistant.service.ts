@@ -18,6 +18,7 @@ import { GraphqlSubscriptionPubSubKafkaService } from "./graphqlSubscriptionPubS
 import { EnumAssistantMessageType } from "./dto/EnumAssistantMessageType";
 import { SegmentAnalyticsService } from "../../services/segmentAnalytics/segmentAnalytics.service";
 import { EnumEventType } from "../../services/segmentAnalytics/segmentAnalyticsEventType.types";
+import { EnumAssistantType } from "./dto/EnumAssistantType";
 
 export const MESSAGE_UPDATED_EVENT = "assistantMessageUpdated";
 
@@ -39,6 +40,13 @@ const ASSISTANT_INSTRUCTIONS: { [key in EnumAssistantMessageType]: string } = {
   The user is already connected to a demo git repo. After the creation is completed, suggest the user to connect to their own git repo.`,
 };
 
+const ASSISTANT_TYPE_TO_ASSISTANT_ID_KEY: {
+  [key in EnumAssistantType]: string;
+} = {
+  [EnumAssistantType.Jovu]: Env.CHAT_ASSISTANT_ID,
+  [EnumAssistantType.PluginAgent]: Env.CHAT_PLUGIN_AGENT_ASSISTANT_ID,
+};
+
 export type MessageLoggerContext = {
   messageContext: {
     workspaceId: string;
@@ -54,7 +62,6 @@ export type MessageLoggerContext = {
 
 @Injectable()
 export class AssistantService {
-  private assistantId: string;
   private assistantFeatureEnabled: boolean;
   private openai: OpenAI;
   private clientHost: string;
@@ -66,17 +73,13 @@ export class AssistantService {
     private readonly billingService: BillingService,
     private readonly assistantFunctionsService: AssistantFunctionsService,
     private readonly analytics: SegmentAnalyticsService,
-
-    configService: ConfigService
+    private configService: ConfigService
   ) {
     this.logger.info("starting assistant service");
 
     this.openai = new OpenAI({
       apiKey: configService.get<string>(Env.CHAT_OPENAI_KEY),
     });
-
-    (this.clientHost = configService.get<string>(Env.CLIENT_HOST)),
-      (this.assistantId = configService.get<string>(Env.CHAT_ASSISTANT_ID));
 
     this.assistantFeatureEnabled = Boolean(
       configService.get<string>(Env.FEATURE_AI_ASSISTANT_ENABLED) === "true"
@@ -124,6 +127,12 @@ export class AssistantService {
       .publish(MESSAGE_UPDATED_EVENT, JSON.stringify(message));
   };
 
+  private getAssistantId(assistantType: EnumAssistantType) {
+    return this.configService.get<string>(
+      ASSISTANT_TYPE_TO_ASSISTANT_ID_KEY[assistantType]
+    );
+  }
+
   //do not expose the entire context as it may include sensitive information
   getShortMessageContext(context: AssistantContext) {
     return {
@@ -167,7 +176,8 @@ export class AssistantService {
     messageText: string,
     threadId: string,
     context: AssistantContext,
-    messageType?: EnumAssistantMessageType
+    messageType?: EnumAssistantMessageType,
+    assistantType: EnumAssistantType = EnumAssistantType.Jovu
   ): Promise<AssistantThread> {
     await this.validateAndReportUsage(context);
 
@@ -181,7 +191,7 @@ export class AssistantService {
 
     const runStream = openai.beta.threads.runs.stream(preparedThread.threadId, {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      assistant_id: this.assistantId,
+      assistant_id: this.getAssistantId(assistantType),
       // eslint-disable-next-line @typescript-eslint/naming-convention
       additional_instructions: `${
         messageType && ASSISTANT_INSTRUCTIONS[messageType]

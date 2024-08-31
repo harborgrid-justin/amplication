@@ -756,6 +756,11 @@ export enum EnumAssistantMessageType {
   Onboarding = 'Onboarding'
 }
 
+export enum EnumAssistantType {
+  Jovu = 'Jovu',
+  PluginAgent = 'PluginAgent'
+}
+
 export enum EnumAuthProviderType {
   Auth0 = 'Auth0',
   Http = 'Http',
@@ -2976,6 +2981,7 @@ export enum Role {
 }
 
 export type SendAssistantMessageInput = {
+  assistantType?: InputMaybe<EnumAssistantType>;
   message: Scalars['String']['input'];
   messageType?: InputMaybe<EnumAssistantMessageType>;
   threadId?: InputMaybe<Scalars['String']['input']>;

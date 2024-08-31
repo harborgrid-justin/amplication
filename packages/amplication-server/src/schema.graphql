@@ -721,6 +721,11 @@ enum EnumAssistantMessageType {
   Onboarding
 }
 
+enum EnumAssistantType {
+  Jovu
+  PluginAgent
+}
+
 enum EnumAuthProviderType {
   Auth0
   Http
@@ -2105,6 +2110,7 @@ enum Role {
 }
 
 input SendAssistantMessageInput {
+  assistantType: EnumAssistantType
   message: String!
   messageType: EnumAssistantMessageType
   threadId: String

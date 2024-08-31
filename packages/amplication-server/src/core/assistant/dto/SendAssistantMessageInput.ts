@@ -1,5 +1,6 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { EnumAssistantMessageType } from "./EnumAssistantMessageType";
+import { EnumAssistantType } from "./EnumAssistantType";
 
 @InputType()
 export class SendAssistantMessageInput {
@@ -17,4 +18,9 @@ export class SendAssistantMessageInput {
     nullable: true,
   })
   messageType?: EnumAssistantMessageType;
+
+  @Field(() => EnumAssistantType, {
+    nullable: true,
+  })
+  assistantType?: EnumAssistantType;
 }

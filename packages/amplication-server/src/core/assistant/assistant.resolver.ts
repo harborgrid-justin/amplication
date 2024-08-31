@@ -47,7 +47,8 @@ export class AssistantResolver {
       args.data.message,
       args.data.threadId,
       args.context,
-      args.data.messageType
+      args.data.messageType,
+      args.data.assistantType
     );
   }
 }
