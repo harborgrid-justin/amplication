@@ -16,3 +16,6 @@ export { default as getServiceEntities } from "./getServiceEntities.json";
 export { default as getServiceModules } from "./getServiceModules.json";
 export { default as installPlugins } from "./installPlugins.json";
 export { default as getService } from "./getService.json";
+export { default as writePluginFiles } from "./writePluginFiles.json";
+export { default as getPluginFileList } from "./getPluginFileList.json";
+export { default as readPluginFileContent } from "./readPluginFileContent.json";

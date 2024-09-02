@@ -33,6 +33,7 @@ import * as functionArgsSchemas from "./functions/";
 import * as functionsArgsTypes from "./functions/types";
 import { USER_ENTITY_NAME } from "../entity/constants";
 import { EnumCodeGenerator } from "../resource/dto/EnumCodeGenerator";
+import { PrivatePluginService } from "../privatePlugin/privatePlugin.service";
 
 export const MESSAGE_UPDATED_EVENT = "assistantMessageUpdated";
 
@@ -116,6 +117,18 @@ const FUNCTION_PERMISSIONS: {
     paramType: AuthorizableOriginParameter.ResourceId,
     paramPath: "serviceId",
   },
+  writePluginFiles: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
+  getPluginFileList: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
+  readPluginFileContent: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
 };
 
 @Injectable()
@@ -135,6 +148,7 @@ export class AssistantFunctionsService {
     private readonly moduleDtoService: ModuleDtoService,
     private readonly permissionsService: PermissionsService,
     private readonly jsonSchemaValidationService: JsonSchemaValidationService,
+    private readonly privatePluginService: PrivatePluginService,
 
     configService: ConfigService
   ) {
@@ -158,7 +172,20 @@ export class AssistantFunctionsService {
 
     this.logger.info(`Chat: Executing function.`, loggerContext);
 
-    const args = JSON.parse(params);
+    let args;
+    try {
+      args = JSON.parse(params);
+    } catch (error) {
+      this.logger.error(
+        `Chat: Error parsing function arguments: ${error.message}`,
+        error,
+        loggerContext
+      );
+      return {
+        callId,
+        results: error.message,
+      };
+    }
 
     if (this.assistantFunctions[functionName] !== undefined) {
       const hasAccess = await this.validatePermissions(
@@ -241,6 +268,8 @@ export class AssistantFunctionsService {
       return false;
     }
 
+    let parameterValue;
+
     if (
       permissions.paramType === AuthorizableOriginParameter.WorkspaceId &&
       permissions.paramPath === "context.workspaceId"
@@ -248,7 +277,14 @@ export class AssistantFunctionsService {
       return true;
     }
 
-    const parameterValue = get(args, permissions.paramPath);
+    if (
+      permissions.paramType === AuthorizableOriginParameter.BlockId &&
+      permissions.paramPath === "context.privatePluginId"
+    ) {
+      parameterValue = context.privatePluginId;
+    } else {
+      parameterValue = get(args, permissions.paramPath);
+    }
 
     if (!parameterValue) {
       return false;
@@ -964,6 +1000,61 @@ export class AssistantFunctionsService {
           `Failed to create the moduleAction ${name} because of the following error. please fix the error and try again. ${error.message}`
         );
       }
+    },
+    writePluginFiles: async (
+      args: functionsArgsTypes.WritePluginFiles,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      if (!context.privatePluginId) {
+        return {
+          error: "Plugin id is missing",
+        };
+      }
+
+      await this.privatePluginService.writePluginContent(
+        context.privatePluginId,
+        args.files
+      );
+
+      return {
+        success: true,
+      };
+    },
+    getPluginFileList: async (
+      args: functionsArgsTypes.GetPluginFileList,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      if (!context.privatePluginId) {
+        return {
+          error: "Plugin id is missing",
+        };
+      }
+
+      return this.privatePluginService.getPluginFilesStructure({
+        where: {
+          id: context.privatePluginId,
+        },
+      });
+    },
+    readPluginFileContent: async (
+      args: functionsArgsTypes.ReadPluginFileContent,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      if (!context.privatePluginId) {
+        return {
+          error: "Plugin id is missing",
+        };
+      }
+
+      return this.privatePluginService.getPluginFileContent({
+        where: {
+          id: context.privatePluginId,
+        },
+        path: args.path,
+      });
     },
   };
 }

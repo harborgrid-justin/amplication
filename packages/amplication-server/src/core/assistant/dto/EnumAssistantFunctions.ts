@@ -19,6 +19,9 @@ export enum EnumAssistantFunctions {
   CreateModuleEnum = "createModuleEnum",
   GetModuleActions = "getModuleActions",
   CreateModuleAction = "createModuleAction",
+  WritePluginFiles = "writePluginFiles",
+  GetPluginFileList = "getPluginFileList",
+  ReadPluginFileContent = "readPluginFileContent",
 }
 
 registerEnumType(EnumAssistantFunctions, {

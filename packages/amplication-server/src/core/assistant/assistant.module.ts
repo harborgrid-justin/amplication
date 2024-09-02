@@ -15,6 +15,7 @@ import { BillingModule } from "../billing/billing.module";
 import { AssistantFunctionsService } from "./assistantFunctions.service";
 import { JsonSchemaValidationModule } from "../../services/jsonSchemaValidation.module";
 import { SegmentAnalyticsModule } from "../../services/segmentAnalytics/segmentAnalytics.module";
+import { PrivatePluginModule } from "../privatePlugin/privatePlugin.module";
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { SegmentAnalyticsModule } from "../../services/segmentAnalytics/segmentA
     BillingModule,
     JsonSchemaValidationModule,
     SegmentAnalyticsModule,
+    PrivatePluginModule,
   ],
   providers: [
     AssistantService,

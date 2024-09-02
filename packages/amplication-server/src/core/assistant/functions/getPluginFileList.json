@@ -1,0 +1,9 @@
+{
+  "name": "getPluginFileList",
+  "description": "Get a list of all files in the plugin, without the content of the files. Each file is represented by its path.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

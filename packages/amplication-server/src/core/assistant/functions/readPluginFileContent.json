@@ -1,0 +1,14 @@
+{
+  "name": "readPluginFileContent",
+  "description": "Read the content of plugin file, if the file does not exist, it will return null.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "description": "the path of the file"
+      }
+    },
+    "required": ["path"]
+  }
+}

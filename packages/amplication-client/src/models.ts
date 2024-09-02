@@ -86,6 +86,7 @@ export type ApiTokenCreateInput = {
 };
 
 export type AssistantContext = {
+  privatePluginId?: InputMaybe<Scalars['String']['input']>;
   projectId?: InputMaybe<Scalars['String']['input']>;
   resourceId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -737,13 +738,16 @@ export enum EnumAssistantFunctions {
   CreateService = 'CreateService',
   GetModuleActions = 'GetModuleActions',
   GetModuleDtosAndEnums = 'GetModuleDtosAndEnums',
+  GetPluginFileList = 'GetPluginFileList',
   GetPlugins = 'GetPlugins',
   GetProjectPendingChanges = 'GetProjectPendingChanges',
   GetProjectServices = 'GetProjectServices',
   GetService = 'GetService',
   GetServiceEntities = 'GetServiceEntities',
   GetServiceModules = 'GetServiceModules',
-  InstallPlugins = 'InstallPlugins'
+  InstallPlugins = 'InstallPlugins',
+  ReadPluginFileContent = 'ReadPluginFileContent',
+  WritePluginFiles = 'WritePluginFiles'
 }
 
 export enum EnumAssistantMessageRole {
@@ -2292,6 +2296,26 @@ export type PrivatePluginCreateInput = {
   resource: WhereParentIdInput;
 };
 
+export type PrivatePluginFile = IBlock & {
+  blockType: EnumBlockType;
+  content: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  displayName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  inputParameters: Array<BlockInputOutput>;
+  lockedAt?: Maybe<Scalars['DateTime']['output']>;
+  lockedByUser?: Maybe<User>;
+  lockedByUserId?: Maybe<Scalars['String']['output']>;
+  outputParameters: Array<BlockInputOutput>;
+  parentBlock?: Maybe<Block>;
+  parentBlockId?: Maybe<Scalars['String']['output']>;
+  path: Scalars['String']['output'];
+  resourceId?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  versionNumber: Scalars['Float']['output'];
+};
+
 export type PrivatePluginOrderByInput = {
   blockType?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
@@ -2448,6 +2472,7 @@ export type Query = {
   pluginInstallations: Array<PluginInstallation>;
   pluginOrder: PluginOrder;
   privatePlugin?: Maybe<PrivatePlugin>;
+  privatePluginFiles: Array<PrivatePluginFile>;
   privatePlugins: Array<PrivatePlugin>;
   project?: Maybe<Project>;
   projectConfigurationSettings: ProjectConfigurationSettings;
@@ -2668,6 +2693,11 @@ export type QueryPluginOrderArgs = {
 
 
 export type QueryPrivatePluginArgs = {
+  where: WhereUniqueInput;
+};
+
+
+export type QueryPrivatePluginFilesArgs = {
   where: WhereUniqueInput;
 };
 

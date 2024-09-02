@@ -16,4 +16,9 @@ export class AssistantContext {
   //the below properties are automatically populated by the resolver based on the authenticated user
   user: User;
   workspaceId: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  privatePluginId?: string;
 }

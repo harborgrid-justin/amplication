@@ -65,6 +65,7 @@ input ApiTokenCreateInput {
 }
 
 input AssistantContext {
+  privatePluginId: String
   projectId: String
   resourceId: String
 }
@@ -702,6 +703,7 @@ enum EnumAssistantFunctions {
   CreateService
   GetModuleActions
   GetModuleDtosAndEnums
+  GetPluginFileList
   GetPlugins
   GetProjectPendingChanges
   GetProjectServices
@@ -709,6 +711,8 @@ enum EnumAssistantFunctions {
   GetServiceEntities
   GetServiceModules
   InstallPlugins
+  ReadPluginFileContent
+  WritePluginFiles
 }
 
 enum EnumAssistantMessageRole {
@@ -1733,6 +1737,26 @@ input PrivatePluginCreateInput {
   resource: WhereParentIdInput!
 }
 
+type PrivatePluginFile implements IBlock {
+  blockType: EnumBlockType!
+  content: String!
+  createdAt: DateTime!
+  description: String
+  displayName: String!
+  id: String!
+  inputParameters: [BlockInputOutput!]!
+  lockedAt: DateTime
+  lockedByUser: User
+  lockedByUserId: String
+  outputParameters: [BlockInputOutput!]!
+  parentBlock: Block
+  parentBlockId: String
+  path: String!
+  resourceId: String
+  updatedAt: DateTime!
+  versionNumber: Float!
+}
+
 input PrivatePluginOrderByInput {
   blockType: SortOrder
   createdAt: SortOrder
@@ -1892,6 +1916,7 @@ type Query {
   pluginInstallations(orderBy: PluginInstallationOrderByInput, skip: Int, take: Int, where: PluginInstallationWhereInput): [PluginInstallation!]!
   pluginOrder(where: WhereUniqueInput!): PluginOrder!
   privatePlugin(where: WhereUniqueInput!): PrivatePlugin
+  privatePluginFiles(where: WhereUniqueInput!): [PrivatePluginFile!]!
   privatePlugins(orderBy: PrivatePluginOrderByInput, skip: Int, take: Int, where: PrivatePluginWhereInput): [PrivatePlugin!]!
   project(where: WhereUniqueInput!): Project
   projectConfigurationSettings(where: WhereUniqueInput!): ProjectConfigurationSettings!

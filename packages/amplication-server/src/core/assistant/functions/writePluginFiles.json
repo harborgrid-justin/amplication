@@ -1,0 +1,28 @@
+{
+  "name": "writePluginFiles",
+  "description": "Creates or updates the content of plugin files. If the file does not exist, it will be created. If the file exists, it will be updated.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "files": {
+        "type": "array",
+        "description": "a list of files.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "the path of the file"
+            },
+            "content": {
+              "type": "string",
+              "description": "the content of the file"
+            }
+          },
+          "required": ["path", "content"]
+        }
+      }
+    },
+    "required": ["files"]
+  }
+}

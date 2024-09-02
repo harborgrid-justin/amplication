@@ -11,6 +11,8 @@ import { UpdatePrivatePluginArgs } from "./dto/UpdatePrivatePluginArgs";
 import { PrivatePluginService } from "./privatePlugin.service";
 import { AuthorizeContext } from "../../decorators/authorizeContext.decorator";
 import { AuthorizableOriginParameter } from "../../enums/AuthorizableOriginParameter";
+import { PrivatePluginFile } from "./dto/PrivatePluginFile";
+import { GetPrivatePluginFilesArgs } from "./dto/GetPrivatePluginFilesArgs";
 
 @Resolver(() => PrivatePlugin)
 @UseFilters(GqlResolverExceptionsFilter)
@@ -37,5 +39,14 @@ export class PrivatePluginResolver extends BlockTypeResolver(
     @Args() args: FindManyPrivatePluginArgs
   ): Promise<PrivatePlugin[]> {
     return this.service.availablePrivatePluginsForResource(args);
+  }
+
+  @Query(() => [PrivatePluginFile])
+  @AuthorizeContext(AuthorizableOriginParameter.BlockId, "where.id")
+  @UseGuards(GqlAuthGuard)
+  async privatePluginFiles(
+    @Args() args: GetPrivatePluginFilesArgs
+  ): Promise<PrivatePluginFile[]> {
+    return this.service.getPluginFiles(args);
   }
 }
