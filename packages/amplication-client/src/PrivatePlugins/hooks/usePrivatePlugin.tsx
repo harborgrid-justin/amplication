@@ -7,6 +7,7 @@ import {
   DELETE_PRIVATE_PLUGIN,
   GET_AVAILABLE_PRIVATE_PLUGINS_FOR_RESOURCE,
   GET_PRIVATE_PLUGIN,
+  GET_PRIVATE_PLUGIN_FILES,
   GET_PRIVATE_PLUGINS,
   PRIVATE_PLUGINS_FIELDS_FRAGMENT,
   UPDATE_PRIVATE_PLUGIN,
@@ -28,6 +29,10 @@ type TGetData = {
   privatePlugin: models.PrivatePlugin;
 };
 
+type TGetPrivatePluginFiles = {
+  privatePluginFiles: models.PrivatePluginFile[];
+};
+
 const DATE_CREATED_FIELD = "createdAt";
 const NAME_FIELD = "displayName";
 
@@ -46,6 +51,30 @@ const usePrivatePlugin = (resourceId: string) => {
     {
       fetchPolicy: "no-cache",
     }
+  );
+
+  const [
+    getPrivatePluginFilesInternal,
+    {
+      data: getPrivatePluginFilesData,
+      loading: getPrivatePluginFilesLoading,
+      error: getPrivatePluginFilesError,
+    },
+  ] = useLazyQuery<TGetPrivatePluginFiles>(GET_PRIVATE_PLUGIN_FILES, {
+    fetchPolicy: "no-cache",
+  });
+
+  const getPrivatePluginFiles = useCallback(
+    (privatePluginId: string) => {
+      getPrivatePluginFilesInternal({
+        variables: {
+          where: {
+            id: privatePluginId,
+          },
+        },
+      });
+    },
+    [getPrivatePluginFilesInternal]
   );
 
   const getAvailablePrivatePluginsForResource = useCallback(() => {
@@ -197,6 +226,10 @@ const usePrivatePlugin = (resourceId: string) => {
     getPrivatePluginsError,
     deletePrivatePlugin,
     deletePrivatePluginError,
+    getPrivatePluginFiles,
+    getPrivatePluginFilesData,
+    getPrivatePluginFilesLoading,
+    getPrivatePluginFilesError,
   };
 };
 

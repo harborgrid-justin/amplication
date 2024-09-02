@@ -1,17 +1,19 @@
 @import "../../style/index.scss";
 
-.json-editor {
+.amp-code-editor {
   margin-bottom: var(--default-spacing);
   flex: 1;
   border: $border-dark;
   border-radius: var(--default-border-radius);
   overflow: hidden;
   background-color: var(--gray-full);
+  height: 100%;
+
   section {
     margin-top: 20px;
   }
-}
 
-.editor--invalid {
-  border-color: var(--theme-red);
+  &--invalid {
+    border-color: var(--theme-red);
+  }
 }

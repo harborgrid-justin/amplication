@@ -14,6 +14,7 @@ import { useAppContext } from "../../context/appContext";
 import { GET_ENTITIES } from "../../Entity/EntityERD/EntitiesERD";
 import { commitPath } from "../../util/paths";
 import { useHistory } from "react-router-dom";
+import { GET_PRIVATE_PLUGIN_FILES } from "../../PrivatePlugins/hooks/privatePluginQueries";
 
 type TAssistantThreadData = {
   sendAssistantMessageWithStream: models.AssistantThread;
@@ -126,6 +127,19 @@ const FUNCTIONS_CACHE_MAP: {
     cacheKey: "",
   },
   [models.EnumAssistantFunctions.GetService]: {
+    refreshPendingChanges: false,
+    cacheKey: "",
+  },
+  [models.EnumAssistantFunctions.WritePluginFiles]: {
+    refreshPendingChanges: false,
+    cacheKey: "privatePluginFiles",
+    queries: [GET_PRIVATE_PLUGIN_FILES],
+  },
+  [models.EnumAssistantFunctions.GetPluginFileList]: {
+    refreshPendingChanges: false,
+    cacheKey: "",
+  },
+  [models.EnumAssistantFunctions.ReadPluginFileContent]: {
     refreshPendingChanges: false,
     cacheKey: "",
   },
@@ -274,7 +288,9 @@ const useAssistant = () => {
 
   const sendMessage = (
     message: string,
-    messageType: models.EnumAssistantMessageType
+    messageType: models.EnumAssistantMessageType,
+    assistantType: models.EnumAssistantType = models.EnumAssistantType.Jovu,
+    privatePluginId?: string
   ) => {
     const messageList = messages;
 
@@ -307,10 +323,12 @@ const useAssistant = () => {
           message,
           threadId,
           messageType,
+          assistantType,
         },
         context: {
           projectId: currentProject?.id,
           resourceId: currentResource?.id,
+          privatePluginId,
         },
       },
     }).catch((error) => {

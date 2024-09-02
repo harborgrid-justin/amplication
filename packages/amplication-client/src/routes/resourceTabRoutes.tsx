@@ -114,6 +114,7 @@ const resourceTabRoutes = [
       },
     ],
   },
+
   {
     path: "/:workspace([A-Za-z0-9-]{20,})/:project([A-Za-z0-9-]{20,})/:resource([A-Za-z0-9-]{20,})/private-plugins",
     Component: lazy(() => import("../PrivatePlugins/PrivatePluginsPage")),
@@ -132,6 +133,7 @@ const resourceTabRoutes = [
       },
     ],
   },
+
   {
     path: "/:workspace([A-Za-z0-9-]{20,})/:project([A-Za-z0-9-]{20,})/:resource([A-Za-z0-9-]{20,})/services",
     Component: lazy(() => import("../MessageBrokerServices/ServicesPage")),

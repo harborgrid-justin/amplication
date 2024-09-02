@@ -11,31 +11,43 @@ import {
 } from "@amplication/ui/design-system";
 import { BillingFeature } from "@amplication/util-billing-types";
 import { useStiggContext } from "@stigg/react-sdk";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
 import "./Assistant.scss";
 import AssistantChatInput from "./AssistantChatInput";
 import AssistantMessage from "./AssistantMessage";
 import JovuLogo from "./JovuLogo";
-import { useAssistantContext } from "./context/AssistantContext";
+import {
+  AssistantMessagesInterface,
+  useAssistantContext,
+} from "./context/AssistantContext";
 import "./AssistantChat.scss";
+import { EnumAssistantMessageType, EnumAssistantType } from "../models";
 
 export const CLASS_NAME = "assistant-chat";
 
-type Props = {
+interface Props extends AssistantMessagesInterface {
   showInput?: boolean;
-};
+  privatePluginId?: string;
+}
 
-const AssistantChat = ({ showInput = true }: Props) => {
+const AssistantChat = ({
+  showInput = true,
+  privatePluginId,
+  messages,
+  sendMessage,
+  processingMessage,
+  streamError,
+}: Props) => {
   const { currentWorkspace } = useAppContext();
 
-  const {
-    sendMessage,
-    messages,
-    processingMessage: loading,
-    streamError,
-  } = useAssistantContext();
+  // const {
+  //   sendMessage,
+  //   messages,
+  //   processingMessage: loading,
+  //   streamError,
+  // } = useAssistantContext();
 
   const { stigg } = useStiggContext();
 
@@ -49,6 +61,22 @@ const AssistantChat = ({ showInput = true }: Props) => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const sendChatMessage = useCallback(
+    (message: string) => {
+      if (privatePluginId) {
+        sendMessage(
+          message,
+          EnumAssistantMessageType.Default,
+          EnumAssistantType.PluginAgent,
+          privatePluginId
+        );
+      } else {
+        sendMessage(message);
+      }
+    },
+    [privatePluginId, sendMessage]
+  );
 
   useEffect(() => {
     scrollToBottom();
@@ -110,7 +138,10 @@ const AssistantChat = ({ showInput = true }: Props) => {
           </div>
 
           {showInput && (
-            <AssistantChatInput disabled={loading} sendMessage={sendMessage} />
+            <AssistantChatInput
+              disabled={processingMessage}
+              sendMessage={sendChatMessage}
+            />
           )}
         </>
       ) : (

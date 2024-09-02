@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MonacoEditor, { EditorProps, Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import "./CodeEditor.scss";
+import classNames from "classnames";
 
 export interface CodeEditorProps {
   width?: string;
@@ -37,6 +38,8 @@ const setCodeValue = (val: string | { [key: string]: any }) => {
 
   return JSON.stringify(val);
 };
+
+const CLASS_NAME = "amp-code-editor";
 
 export const CodeEditor: React.FC<CodeEditorProps> = ({
   width = "100%",
@@ -107,9 +110,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
 
   return (
     <div
-      className={`json-editor${className || ""}${
-        !isValid ? " editor--invalid" : ""
-      }`}
+      className={classNames(CLASS_NAME, className, {
+        [`${CLASS_NAME}--invalid`]: !isValid,
+      })}
     >
       <MonacoEditor
         width={width}

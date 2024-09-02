@@ -1,16 +1,15 @@
-import { Icon, Snackbar, TreeView } from "@amplication/ui/design-system";
-import React, { useCallback, useEffect, useState } from "react";
+import { Snackbar } from "@amplication/ui/design-system";
+import { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Build } from "../../models";
+import { formatError } from "../../util/error";
+import "./CodeViewBar.scss";
+import { FileMeta } from "./FileExplorer";
 import { FileDetails } from "./CodeViewPage";
-import { FileExplorerNode } from "./FileExplorerNode";
+import FileExplorer from "./FileExplorer";
 import { NodeTypeEnum } from "./NodeTypeEnum";
 import { StorageBaseAxios, StorageResponseType } from "./StorageBaseAxios";
-import { useQuery } from "react-query";
-import { AxiosError } from "axios";
-import { remove } from "lodash";
-import { FileMeta } from "./CodeViewExplorer";
-import "./CodeViewBar.scss";
-import { formatError } from "../../util/error";
 
 const CLASS_NAME = "code-view-bar";
 const ERROR_MESSAGE_PREFIX = "Can't fetch files data from serer.";
@@ -20,8 +19,6 @@ type Props = {
   resourceId: string;
   onFileSelected: (selectedFile: FileDetails) => void;
 };
-
-const NO_FILES_MESSAGE = "There are no available files to show for this build";
 
 const INITIAL_ROOT_NODE: FileMeta = {
   type: NodeTypeEnum.Folder,
@@ -38,7 +35,6 @@ const CodeViewExplorerTree = ({
 }: Props) => {
   const [rootFile, setRootFile] = useState<FileMeta>(INITIAL_ROOT_NODE);
   const [selectedFolder, setSelectedFolder] = useState<FileMeta>(rootFile);
-  const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
 
   const { error, isError } = useQuery<StorageResponseType, AxiosError>(
     ["storage-folderList", selectedBuild.id, selectedFolder?.path],
@@ -77,23 +73,12 @@ const CodeViewExplorerTree = ({
           });
         },
         [NodeTypeEnum.Folder]: () => {
-          const expandedNodes = [...expandedFolders];
-          const removed = remove(expandedNodes, (item) => {
-            return item === file.path;
-          });
-          if (!removed.length) {
-            expandedNodes.push(file.path);
-            file.expanded = true;
-          } else {
-            file.expanded = false;
-          }
-          setExpandedFolders(expandedNodes);
           setSelectedFolder(file);
         },
       };
       fileTypeMap[file.type]();
     },
-    [selectedBuild, onFileSelected, expandedFolders, resourceId]
+    [selectedBuild, onFileSelected, resourceId]
   );
 
   const errorMessage = formatError(error);
@@ -101,25 +86,7 @@ const CodeViewExplorerTree = ({
   return (
     <div className={CLASS_NAME}>
       {selectedBuild && (
-        <div>
-          {rootFile.children?.length ? (
-            <TreeView
-              expanded={expandedFolders}
-              defaultExpandIcon={<Icon icon="arrow_left" />}
-              defaultCollapseIcon={<Icon icon="arrow_left" />}
-            >
-              {rootFile.children?.map((child) => (
-                <FileExplorerNode
-                  file={child}
-                  key={child.path + JSON.stringify(child.children)}
-                  onSelect={handleNodeClick}
-                />
-              ))}
-            </TreeView>
-          ) : (
-            NO_FILES_MESSAGE
-          )}
-        </div>
+        <FileExplorer rootFile={rootFile} onFileSelected={handleNodeClick} />
       )}
       <Snackbar
         open={isError}

@@ -1,0 +1,25 @@
+@import "../style/index.scss";
+$explorer-width: 300px;
+
+.private-plugin-agent {
+  height: calc(var(--default-spacing) + 100%);
+  margin-top: calc(var(--default-spacing) * -1);
+  margin-bottom: calc(var(--default-spacing) * -1);
+
+  &__explorer {
+    width: $explorer-width;
+    border: $border-dark;
+    background-color: var(--gray-full);
+    border-radius: var(--default-border-radius);
+    padding: var(--default-spacing);
+    box-sizing: border-box;
+    overflow-y: auto;
+    @include scrollbars(16px, var(--gray-30), transparent);
+    height: 100%;
+  }
+
+  &__editor {
+    flex: 1;
+    height: 100%;
+  }
+}

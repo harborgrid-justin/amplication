@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { AppContext } from "../context/appContext";
 import { formatError } from "../util/error";
 import PrivatePluginForm from "./PrivatePluginForm";
@@ -128,6 +128,11 @@ const PrivatePlugin = () => {
               onDelete={handleDeletePrivatePlugin}
             />
           )}
+          <Link
+            to={`/${currentWorkspace?.id}/${currentProject?.id}/${resource}/plugin-agent/${privatePluginId}`}
+          >
+            Agent
+          </Link>
         </FlexItem.FlexEnd>
       </FlexItem>
       <Panel panelStyle={EnumPanelStyle.Bordered}>

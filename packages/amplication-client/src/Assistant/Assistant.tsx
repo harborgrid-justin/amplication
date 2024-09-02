@@ -37,8 +37,16 @@ const WIDTH_STATE_SETTINGS: Record<
 };
 
 const Assistant = () => {
-  const { open, setOpen, widthState, setWidthState, messages } =
-    useAssistantContext();
+  const {
+    open,
+    setOpen,
+    widthState,
+    setWidthState,
+    messages,
+    processingMessage,
+    sendMessage,
+    streamError,
+  } = useAssistantContext();
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const scrollToBottom = () => {
@@ -108,7 +116,12 @@ const Assistant = () => {
           </Tooltip>
         </div>
 
-        <AssistantChat />
+        <AssistantChat
+          messages={messages}
+          processingMessage={processingMessage}
+          streamError={streamError}
+          sendMessage={sendMessage}
+        />
       </div>
     </>
   );

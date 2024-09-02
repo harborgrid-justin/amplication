@@ -71,3 +71,12 @@ export const UPDATE_PRIVATE_PLUGIN = gql`
     }
   }
 `;
+
+export const GET_PRIVATE_PLUGIN_FILES = gql`
+  query privatePluginFiles($where: WhereUniqueInput!) {
+    privatePluginFiles(where: $where) {
+      path
+      content
+    }
+  }
+`;

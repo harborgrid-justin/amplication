@@ -4,19 +4,25 @@ import useAssistant, {
 } from "../hooks/useAssistant";
 import { ApolloError } from "@apollo/client";
 import * as Models from "../../models";
-export interface AssistantContextInterface {
+
+export interface AssistantMessagesInterface {
+  messages: AssistantMessageWithOptions[];
+  streamError: ApolloError;
+  processingMessage: boolean;
+  sendMessage: (
+    message: string,
+    messageType?: Models.EnumAssistantMessageType,
+    assistantType?: Models.EnumAssistantType,
+    privatePluginId?: string
+  ) => void;
+}
+
+export interface AssistantContextInterface extends AssistantMessagesInterface {
   open: boolean;
   setOpen: (open: boolean) => void;
   widthState: string;
   setWidthState: (widthState: "default" | "wide") => void;
-  sendMessage: (
-    message: string,
-    messageType?: Models.EnumAssistantMessageType
-  ) => void;
   sendOnboardingMessage: (message: string) => void;
-  messages: AssistantMessageWithOptions[];
-  streamError: ApolloError;
-  processingMessage: boolean;
 }
 
 const initialContext: AssistantContextInterface = {

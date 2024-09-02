@@ -7,20 +7,11 @@ import { Commit, Resource } from "../../models";
 import "./CodeViewBar.scss";
 import CodeViewExplorerTree from "./CodeViewExplorerTree";
 import { FileDetails } from "./CodeViewPage";
-import { NodeTypeEnum } from "./NodeTypeEnum";
 
 const CLASS_NAME = "code-view-bar";
 
 type Props = {
   onFileSelected: (selectedFile: FileDetails | null) => void;
-};
-
-export type FileMeta = {
-  type: NodeTypeEnum;
-  name: string;
-  path: string;
-  children?: FileMeta[] | undefined;
-  expanded?: boolean;
 };
 
 const CodeViewExplorer: React.FC<Props> = ({ onFileSelected }) => {

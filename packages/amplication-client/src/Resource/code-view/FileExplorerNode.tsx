@@ -1,7 +1,7 @@
 import { Icon, TreeItem } from "@amplication/ui/design-system";
 import React, { useCallback, useMemo } from "react";
 import { NodeTypeEnum } from "./NodeTypeEnum";
-import { FileMeta } from "./CodeViewExplorer";
+import { FileMeta } from "./FileExplorer";
 
 export type FileExplorerNodeProps = {
   file: FileMeta;

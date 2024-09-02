@@ -29,6 +29,15 @@ const resourceRoutes = [
     exactPath: true,
     isAnalytics: true,
   },
+  {
+    path: "/:workspace([A-Za-z0-9-]{20,})/:project([A-Za-z0-9-]{20,})/:resource([A-Za-z0-9-]{20,})/plugin-agent/:pluginId",
+    Component: lazy(() => import("../PluginAgent/PluginAgentPage")),
+    moduleName: "",
+    routeTrackType: "",
+    exactPath: true,
+    routes: [],
+    isAnalytics: true,
+  },
 ];
 
 export default resourceRoutes;
