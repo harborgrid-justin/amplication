@@ -1,0 +1,24 @@
+{
+  "name": "planPluginCreation",
+  "description": "Creates a plan for a plugin creation. The plan includes a list of steps, each step describes a specific change that is needed for the plugin to achieve its goal. for example - update docker-compose.dev to include the container for postgres, update .env file to include a variable for the username, or create a new service to wrap the sdk for integration with OpenAI.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "steps": {
+        "type": "array",
+        "description": "a list of plan steps.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "step": {
+              "type": "string",
+              "description": "The step description"
+            }
+          },
+          "required": ["step"]
+        }
+      }
+    },
+    "required": ["steps"]
+  }
+}

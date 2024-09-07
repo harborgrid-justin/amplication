@@ -1,0 +1,9 @@
+{
+  "name": "getNextStepForPluginPlan",
+  "description": "Return the details of the next step to be executed in the plan for a plugin creation.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

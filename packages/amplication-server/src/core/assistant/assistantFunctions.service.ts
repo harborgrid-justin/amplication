@@ -129,6 +129,22 @@ const FUNCTION_PERMISSIONS: {
     paramType: AuthorizableOriginParameter.BlockId,
     paramPath: "context.privatePluginId",
   },
+  planPluginCreation: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
+  getNextStepForPluginPlan: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
+  outlinePluginChanges: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
+  getNextChangeForPluginOutline: {
+    paramType: AuthorizableOriginParameter.BlockId,
+    paramPath: "context.privatePluginId",
+  },
 };
 
 @Injectable()
@@ -1055,6 +1071,75 @@ export class AssistantFunctionsService {
         },
         path: args.path,
       });
+    },
+    planPluginCreation: async (
+      args: functionsArgsTypes.PlanPluginCreation,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      await this.privatePluginService.planPluginCreation(
+        context.privatePluginId,
+        args.steps
+      );
+
+      return {
+        success: true,
+      };
+    },
+    getNextStepForPluginPlan: async (
+      args: functionsArgsTypes.GetNextStepForPluginPlan,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      const nextStep = await this.privatePluginService.getNextStepForPluginPlan(
+        context.privatePluginId
+      );
+      if (!nextStep) {
+        return {
+          step: null,
+          message: "All steps are processed",
+        };
+      }
+      return {
+        step: nextStep.step,
+        additionalInstructions:
+          "You need to create the changes for the outline in order to generate the code for this step",
+      };
+    },
+    outlinePluginChanges: async (
+      args: functionsArgsTypes.OutlinePluginChanges,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      await this.privatePluginService.outlinePluginChanges(
+        context.privatePluginId,
+        args.changes
+      );
+
+      return {
+        success: true,
+      };
+    },
+    getNextChangeForPluginOutline: async (
+      args: functionsArgsTypes.GetNextChangeForPluginOutline,
+      context: AssistantContext,
+      loggerContext: MessageLoggerContext
+    ) => {
+      const nextChange =
+        await this.privatePluginService.getNextChangeForPluginOutline(
+          context.privatePluginId
+        );
+      if (!nextChange) {
+        return {
+          change: null,
+          message: "All changes are processed",
+        };
+      }
+      return {
+        change: nextChange.step,
+        additionalInstructions:
+          "You need to create the files for the plugins in order to generate the code for this step",
+      };
     },
   };
 }

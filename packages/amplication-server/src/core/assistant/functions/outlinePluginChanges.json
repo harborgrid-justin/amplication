@@ -1,0 +1,24 @@
+{
+  "name": "outlinePluginChanges",
+  "description": "Creates an outline for a all the changes needed in order to create the plugin. The outline includes a list of changes, each changes describes the files to be updated or created",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "changes": {
+        "type": "array",
+        "description": "a list of outline changes.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "change": {
+              "type": "string",
+              "description": "The change to be made"
+            }
+          },
+          "required": ["change"]
+        }
+      }
+    },
+    "required": ["changes"]
+  }
+}

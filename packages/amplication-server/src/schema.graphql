@@ -703,6 +703,8 @@ enum EnumAssistantFunctions {
   CreateService
   GetModuleActions
   GetModuleDtosAndEnums
+  GetNextChangeForPluginOutline
+  GetNextStepForPluginPlan
   GetPluginFileList
   GetPlugins
   GetProjectPendingChanges
@@ -711,6 +713,8 @@ enum EnumAssistantFunctions {
   GetServiceEntities
   GetServiceModules
   InstallPlugins
+  OutlinePluginChanges
+  PlanPluginCreation
   ReadPluginFileContent
   WritePluginFiles
 }

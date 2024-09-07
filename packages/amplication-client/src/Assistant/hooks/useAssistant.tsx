@@ -143,6 +143,24 @@ const FUNCTIONS_CACHE_MAP: {
     refreshPendingChanges: false,
     cacheKey: "",
   },
+  [models.EnumAssistantFunctions.PlanPluginCreation]: {
+    refreshPendingChanges: false,
+    cacheKey: "privatePluginFiles",
+    queries: [GET_PRIVATE_PLUGIN_FILES],
+  },
+  [models.EnumAssistantFunctions.GetNextStepForPluginPlan]: {
+    refreshPendingChanges: false,
+    cacheKey: "",
+  },
+  [models.EnumAssistantFunctions.GetNextChangeForPluginOutline]: {
+    refreshPendingChanges: false,
+    cacheKey: "",
+  },
+  [models.EnumAssistantFunctions.OutlinePluginChanges]: {
+    refreshPendingChanges: false,
+    cacheKey: "privatePluginFiles",
+    queries: [GET_PRIVATE_PLUGIN_FILES],
+  },
 };
 
 const useAssistant = () => {
@@ -204,11 +222,11 @@ const useAssistant = () => {
         const functionExecuted = message.functionExecuted;
 
         if (functionExecuted) {
-          const cacheKey = FUNCTIONS_CACHE_MAP[functionExecuted].cacheKey;
+          const cacheKey = FUNCTIONS_CACHE_MAP[functionExecuted]?.cacheKey;
           if (cacheKey) {
             updateCache(cacheKey);
           }
-          if (FUNCTIONS_CACHE_MAP[functionExecuted].refreshPendingChanges) {
+          if (FUNCTIONS_CACHE_MAP[functionExecuted]?.refreshPendingChanges) {
             addBlock("blockId");
           }
 

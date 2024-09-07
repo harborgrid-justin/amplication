@@ -1,0 +1,9 @@
+{
+  "name": "getNextChangeForPluginOutline",
+  "description": "Return the details of the next change to be executed in the outline for a plugin creation.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

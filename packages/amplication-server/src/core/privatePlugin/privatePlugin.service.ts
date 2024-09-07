@@ -21,6 +21,11 @@ import { outputFile, readdir, readFile } from "fs-extra";
 import { GetPrivatePluginFilesArgs } from "./dto/GetPrivatePluginFilesArgs";
 import { GetPrivatePluginFileContentArgs } from "./dto/GetPrivatePluginFileContentArgs";
 
+type PlanStep = {
+  step: string;
+  status: "processed" | "pending";
+};
+
 @Injectable()
 export class PrivatePluginService extends BlockTypeService<
   PrivatePlugin,
@@ -102,6 +107,78 @@ export class PrivatePluginService extends BlockTypeService<
     for (const file of files) {
       const fullPath = join(path, file.path);
       await outputFile(fullPath, file.content);
+    }
+  }
+
+  async outlinePluginChanges(
+    pluginId: string,
+    changes: {
+      change: string;
+    }[]
+  ): Promise<void> {
+    const path = normalize(`${this.baseFilesPath}/${pluginId}/outline.json`);
+
+    changes = changes.map((change) => ({
+      ...change,
+      status: "pending",
+    }));
+
+    await outputFile(path, JSON.stringify(changes, null, 2));
+  }
+
+  async getNextChangeForPluginOutline(
+    pluginId: string
+  ): Promise<PlanStep | null> {
+    const path = normalize(`${this.baseFilesPath}/${pluginId}/outline.json`);
+
+    const changes = await readFile(path, "utf8");
+
+    try {
+      const parsed: PlanStep[] = JSON.parse(changes);
+      const nextChange = parsed.find((step) => step.status === "pending");
+      if (!nextChange) {
+        return null;
+      }
+      nextChange.status = "processed";
+      await outputFile(path, JSON.stringify(parsed, null, 2));
+      return nextChange;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async planPluginCreation(
+    pluginId: string,
+    steps: {
+      step: string;
+    }[]
+  ): Promise<void> {
+    const path = normalize(`${this.baseFilesPath}/${pluginId}/plan.json`);
+
+    steps = steps.map((step) => ({
+      ...step,
+      status: "pending",
+    }));
+
+    await outputFile(path, JSON.stringify(steps, null, 2));
+  }
+
+  async getNextStepForPluginPlan(pluginId: string): Promise<PlanStep | null> {
+    const path = normalize(`${this.baseFilesPath}/${pluginId}/plan.json`);
+
+    const steps = await readFile(path, "utf8");
+
+    try {
+      const parsed: PlanStep[] = JSON.parse(steps);
+      const nextStep = parsed.find((step) => step.status === "pending");
+      if (!nextStep) {
+        return null;
+      }
+      nextStep.status = "processed";
+      await outputFile(path, JSON.stringify(parsed, null, 2));
+      return nextStep;
+    } catch (e) {
+      return null;
     }
   }
 

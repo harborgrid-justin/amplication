@@ -22,6 +22,10 @@ export enum EnumAssistantFunctions {
   WritePluginFiles = "writePluginFiles",
   GetPluginFileList = "getPluginFileList",
   ReadPluginFileContent = "readPluginFileContent",
+  PlanPluginCreation = "planPluginCreation",
+  GetNextStepForPluginPlan = "getNextStepForPluginPlan",
+  GetNextChangeForPluginOutline = "getNextChangeForPluginOutline",
+  OutlinePluginChanges = "outlinePluginChanges",
 }
 
 registerEnumType(EnumAssistantFunctions, {

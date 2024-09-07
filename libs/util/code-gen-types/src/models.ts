@@ -735,6 +735,8 @@ export enum EnumAssistantFunctions {
   CreateService = 'CreateService',
   GetModuleActions = 'GetModuleActions',
   GetModuleDtosAndEnums = 'GetModuleDtosAndEnums',
+  GetNextChangeForPluginOutline = 'GetNextChangeForPluginOutline',
+  GetNextStepForPluginPlan = 'GetNextStepForPluginPlan',
   GetPluginFileList = 'GetPluginFileList',
   GetPlugins = 'GetPlugins',
   GetProjectPendingChanges = 'GetProjectPendingChanges',
@@ -743,6 +745,8 @@ export enum EnumAssistantFunctions {
   GetServiceEntities = 'GetServiceEntities',
   GetServiceModules = 'GetServiceModules',
   InstallPlugins = 'InstallPlugins',
+  OutlinePluginChanges = 'OutlinePluginChanges',
+  PlanPluginCreation = 'PlanPluginCreation',
   ReadPluginFileContent = 'ReadPluginFileContent',
   WritePluginFiles = 'WritePluginFiles'
 }

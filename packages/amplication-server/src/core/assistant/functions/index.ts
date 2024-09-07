@@ -19,3 +19,7 @@ export { default as getService } from "./getService.json";
 export { default as writePluginFiles } from "./writePluginFiles.json";
 export { default as getPluginFileList } from "./getPluginFileList.json";
 export { default as readPluginFileContent } from "./readPluginFileContent.json";
+export { default as planPluginCreation } from "./planPluginCreation.json";
+export { default as getNextStepForPluginPlan } from "./getNextStepForPluginPlan.json";
+export { default as getNextChangeForPluginOutline } from "./getNextChangeForPluginOutline.json";
+export { default as outlinePluginChanges } from "./outlinePluginChanges.json";
