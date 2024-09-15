@@ -30,12 +30,12 @@ import { EnumPreviewAccountType } from "../auth/dto/EnumPreviewAccountType";
 
 const SUBSCRIPTION_PLAN_MAP: Record<BillingPlan, EnumSubscriptionPlan> = {
   [BillingPlan.Enterprise]: EnumSubscriptionPlan.Enterprise,
-  [BillingPlan.Essential]: EnumSubscriptionPlan.Essential,
-  [BillingPlan.Free]: EnumSubscriptionPlan.Free,
+  [BillingPlan.Essential]: EnumSubscriptionPlan.Enterprise,
+  [BillingPlan.Free]: EnumSubscriptionPlan.Enterprise,
   [BillingPlan.PreviewBreakTheMonolith]:
     EnumSubscriptionPlan.PreviewBreakTheMonolith,
-  [BillingPlan.Pro]: EnumSubscriptionPlan.Pro,
-  [BillingPlan.ProWithTrial]: EnumSubscriptionPlan.Pro,
+  [BillingPlan.Pro]: EnumSubscriptionPlan.Enterprise,
+  [BillingPlan.ProWithTrial]: EnumSubscriptionPlan.Enterprise,
 };
 
 @Injectable()
