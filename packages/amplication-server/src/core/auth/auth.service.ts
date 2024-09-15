@@ -491,18 +491,19 @@ export class AuthService {
    * @param user to create token for
    * @returns new JWT token
    */
-  async prepareToken(user: AuthUser): Promise<string> {
-    const roles = user.userRoles.map((role) => role.role);
+async prepareToken(user: AuthUser): Promise<string> {
+  const roles = user?.userRoles?.map((role) => role.role);
 
-    const payload: JwtDto = {
-      accountId: user.account.id,
-      userId: user.id,
-      roles,
-      workspaceId: user.workspace.id,
-      type: EnumTokenType.User,
-    };
-    return this.jwtService.sign(payload);
-  }
+  const payload: JwtDto = {
+    accountId: user?.account?.id,
+    userId: user?.id,
+    roles,
+    workspaceId: user?.workspace?.id,
+    type: EnumTokenType.User,
+  };
+
+  return this.jwtService.sign(payload);
+}
 
   /**
    * Creates an API token from given user
